@@ -1,7 +1,7 @@
 import logo from '../asset/img/pizza-logo.svg';
-import Button  from './Button';
+import Button from './Button';
 
-export default  function Header() {
+export default function Header() {
 	return (
 		<div className='header'>
 			<div className='container'>

@@ -8,7 +8,7 @@ export default function Categories({ items }) {
 		setActiveItem(name);
 	};
 
-	const isActiveItem = name => (activeItem === name ? true : false);
+	const isActiveItem = name => (activeItem === name && true);
 
 	return (
 		<div className='categories'>
