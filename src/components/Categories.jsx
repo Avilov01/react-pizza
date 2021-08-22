@@ -1,28 +1,34 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
 
-export default function Categories({ items }) {
-	const [activeItem, setActiveItem] = useState('Все');
+const Categories = React.memo(function Categories({ items, onClickItem }) {
+	const [activeItem, setActiveItem] = useState(null);
 
-	const onSelectItem = name => {
-		setActiveItem(name);
+	const onSelectItem = index => {
+		setActiveItem(index);
+		onClickItem(index);
 	};
 
-	const isActiveItem = name => (activeItem === name && true);
+	const isActiveItem = index => activeItem === index && true;
 
 	return (
 		<div className='categories'>
 			<ul>
+				<li className={activeItem === null ? 'active' : ''} onClick={() => onSelectItem(null)}>
+					Все
+				</li>
 				{items &&
-					items.map(name => (
+					items.map((name, index) => (
 						<li
-							onClick={() => onSelectItem(name)}
+							onClick={() => onSelectItem(index)}
 							key={name}
-							className={classNames({ active: isActiveItem(name) })}>
+							className={classNames({ active: isActiveItem(index) })}>
 							{name}
 						</li>
 					))}
 			</ul>
 		</div>
 	);
-}
+});
+
+export default Categories;

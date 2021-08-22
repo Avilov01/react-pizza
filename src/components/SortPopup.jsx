@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 
-export default function SortPopup({ items }) {
+const SortPopup = React.memo(function SortPopup({ items }) {
 	const [visiblePopup, setVisiblePopup] = useState(false);
-	const [activeItem, setActiveItem] = useState(items[0]);
+	const [activeItem, setActiveItem] = useState(0);
 
 	useEffect(() => {
 		document.body.addEventListener('click', handleOutsideClick);
@@ -26,7 +26,7 @@ export default function SortPopup({ items }) {
 		setVisiblePopup(false);
 	};
 
-	const isActiveItem = name => activeItem === name && true;
+	const isActiveItem = index => activeItem === index && true;
 
 	return (
 		<div className='sort' ref={sortRef}>
@@ -44,18 +44,18 @@ export default function SortPopup({ items }) {
 					/>
 				</svg>
 				<b>Сортировка по:</b>
-				<span onClick={toggleIsVisible}>{activeItem}</span>
+				<span onClick={toggleIsVisible}>{items[activeItem].name}</span>
 			</div>
 			{visiblePopup && (
 				<div className='sort__popup'>
 					<ul>
 						{items &&
-							items.map(name => (
+							items.map((obj, index) => (
 								<li
-									onClick={() => onSelectItem(name)}
-									key={name}
-									className={classNames({ active: isActiveItem(name) })}>
-									{name}
+									onClick={() => onSelectItem(index)}
+									key={obj.type}
+									className={classNames({ active: isActiveItem(index) })}>
+									{obj.name}
 								</li>
 							))}
 					</ul>
@@ -63,4 +63,6 @@ export default function SortPopup({ items }) {
 			)}
 		</div>
 	);
-}
+});
+
+export default SortPopup;
