@@ -1,8 +1,11 @@
 import { SET_CATEGORY, SET_SORT_BY } from '../actions/filters';
 
 const initialState = {
-	category: 0,
-	sortBy: 'popular',
+	category: null,
+	sortBy: {
+		type: 'popular',
+		order: 'desc'
+	},
 };
 
 const filters = (state = initialState, action) => {
