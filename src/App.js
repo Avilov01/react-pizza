@@ -7,8 +7,8 @@ import { Home, Cart } from './pages';
 function App() {
 	return (
 		<div className='wrapper'>
+			<Header />
 			<div className='content'>
-				<Header />
 				<Route exact path='/' component={Home} />
 				<Route exact path='/cart' component={Cart} />
 			</div>
