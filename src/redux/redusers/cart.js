@@ -1,10 +1,18 @@
-import { ADD_PIZZA_TO_CART, CLEAR_CART, REMOVE_CART_ITEM } from '../actions/cart';
+import {
+	ADD_PIZZA_TO_CART,
+	CLEAR_CART,
+	MINUS_ITEM,
+	PLUS_ITEM,
+	REMOVE_CART_ITEM,
+} from '../actions/cart';
 
 const initialState = {
 	items: {},
 	totalPrice: 0,
 	totalCount: 0,
 };
+
+const getTotalPrice = arr => arr.reduce((sum, obj) => obj.price + sum, 0);
 
 const cart = (state = initialState, action) => {
 	switch (action.type) {
@@ -16,7 +24,7 @@ const cart = (state = initialState, action) => {
 				...state.items,
 				[action.payload.id]: {
 					items: currentPizzaItems,
-					totalPrice: currentPizzaItems.reduce((sum, obj) => obj.price + sum, 0),
+					totalPrice: getTotalPrice(currentPizzaItems),
 				},
 			};
 
@@ -46,6 +54,55 @@ const cart = (state = initialState, action) => {
 				totalCount: state.totalCount - currentTotalCount,
 				totalPrice: state.totalPrice - currentTotalPrice,
 			};
+
+		case PLUS_ITEM: {
+			const newObjItems = [
+				...state.items[action.payload].items,
+				state.items[action.payload].items[0],
+			];
+
+			const newItems = {
+				...state.items,
+				[action.payload]: {
+					items: newObjItems,
+					totalPrice: getTotalPrice(newObjItems),
+				},
+			};
+
+			return {
+				...state,
+				items: newItems,
+				totalCount: state.totalCount + 1,
+				totalPrice: state.totalPrice + newObjItems[0].price,
+			};
+		}
+
+		case MINUS_ITEM: {
+			const newObjItems = [
+				...state.items[action.payload].items,
+				state.items[action.payload].items[0],
+			];
+
+			const oldItems = state.items[action.payload].items;
+
+			const newItems =
+				oldItems.length > 1 ? state.items[action.payload].items.slice(1) : oldItems;
+
+			return {
+				...state,
+				items: {
+					...state.items,
+					[action.payload]: {
+						items: newItems,
+						totalPrice: getTotalPrice(newItems),
+					},
+				},
+
+				totalCount: oldItems.length > 1 ? state.totalCount - 1 : state.totalCount,
+				totalPrice:
+					oldItems.length > 1 ? state.totalPrice - newObjItems[0].price : state.totalPrice,
+			};
+		}
 
 		default:
 			return state;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearCart, removeCartItem } from '../redux/actions/cart';
+import { clearCart, minusCartItem, plusCartItem, removeCartItem } from '../redux/actions/cart';
 import { Link } from 'react-router-dom';
 
-import { CartItem } from '../components';
+import { Button, CartItem } from '../components';
 import emptyCartImg from '../asset/img/empty-cart.png';
 
 export default function Cart() {
@@ -17,16 +17,28 @@ export default function Cart() {
 		if (window.confirm('Вы уыерены, что хотите очитсить корзину?')) dispatch(clearCart());
 	};
 
-	const onRemoveCartItem = (id) => {
-		(window.confirm('Вы действительно хотите удалить пиццу?'))
-		dispatch(removeCartItem(id))
-	}
+	const onRemoveCartItem = id => {
+		window.confirm('Вы действительно хотите удалить пиццу?');
+		dispatch(removeCartItem(id));
+	};
+
+	const onPlusCartItem = id => {
+		dispatch(plusCartItem(id));
+	};
+
+	const onMinusCartItem = id => {
+		dispatch(minusCartItem(id));
+	};
+
+	const onClickOrder = () => {};
 
 	return (
 		<div className='container container--cart'>
 			{!totalCount ? (
 				<div className='cart cart--empty'>
-					<h2>Корзина пустая 😕</h2>
+					<h2>
+						Корзина пустая <i>😕</i>{' '}
+					</h2>
 					<p>
 						Вероятней всего, вы не заказывали ещё пиццу.
 						<br />
@@ -114,6 +126,7 @@ export default function Cart() {
 					<div className='content__items'>
 						{addedPizzas.map(item => (
 							<CartItem
+								key={item.id}
 								name={item.name}
 								id={item.id}
 								imageUrl={item.imageUrl}
@@ -123,7 +136,8 @@ export default function Cart() {
 								totalPrice={items[item.id].totalPrice}
 								totalCount={items[item.id].items.length}
 								onRemove={onRemoveCartItem}
-								key={item.id}
+								onPlus={onPlusCartItem}
+								onMinus={onMinusCartItem}
 							/>
 						))}
 					</div>
@@ -157,9 +171,9 @@ export default function Cart() {
 
 								<span>Вернуться назад</span>
 							</Link>
-							<div className='button pay-btn'>
+							<Button className='pay-btn' onClick={onClickOrder}>
 								<span>Оплатить сейчас</span>
-							</div>
+							</Button>
 						</div>
 					</div>
 				</div>
